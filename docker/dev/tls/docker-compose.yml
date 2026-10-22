@@ -36,6 +36,7 @@ services:
           - hocuspocus.${OPENPROJECT_DOCKER_DEV_TLD:-local}
           - garage.${OPENPROJECT_DOCKER_DEV_TLD:-local}
           - jira-software.${OPENPROJECT_DOCKER_DEV_TLD:-local}
+          - jira-software-8.${OPENPROJECT_DOCKER_DEV_TLD:-local}
     labels:
       - "traefik.http.routers.traefik.rule=Host(`traefik.${OPENPROJECT_DOCKER_DEV_TLD:-local}`)"
       - "traefik.http.routers.traefik.service=api@internal"

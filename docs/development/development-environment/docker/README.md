@@ -290,15 +290,16 @@ define for your services to your `/etc/hosts`.
 
 Each optional service under `docker/dev` that you run behind the proxy needs its own entry:
 
-| Service       | Host name             |
-|---------------|-----------------------|
-| Garage        | `garage.local`        |
-| GitLab        | `gitlab.local`        |
-| Jira Software | `jira-software.local` |
-| Keycloak      | `keycloak.local`      |
-| Nextcloud     | `nextcloud.local`     |
-| SquashTM      | `squashtm.local`      |
-| XWiki         | `xwiki.local`         |
+| Service         | Host name               |
+|-----------------|-------------------------|
+| Garage          | `garage.local`          |
+| GitLab          | `gitlab.local`          |
+| Jira Software   | `jira-software.local`   |
+| Jira Software 8 | `jira-software-8.local` |
+| Keycloak        | `keycloak.local`        |
+| Nextcloud       | `nextcloud.local`       |
+| SquashTM        | `squashtm.local`        |
+| XWiki           | `xwiki.local`           |
 
 When adding a new service, the host name is the one used in its traefik `Host(...)` rule.
 

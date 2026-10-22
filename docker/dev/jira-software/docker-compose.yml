@@ -29,10 +29,63 @@ services:
       - jiraVolume:/var/atlassian/application-data/jira
     depends_on:
       - db-jira
+
+  # Jira 8.20 supports PostgreSQL 10–12 only.
+  db-jira-8:
+    extends: db-jira
+    image: postgres:12
+    profiles:
+      - jira8
+    volumes:
+      - "pgdata8:/var/lib/postgresql/data"
+
+  jira-software-8:
+    image: atlassian/jira-software:${JIRA_8_VERSION}
+    platform: linux/amd64
+    profiles:
+      - jira8
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.jira-software-8.rule=Host(`jira-software-8.${OPENPROJECT_DOCKER_DEV_TLD}`)"
+      - "traefik.http.routers.jira-software-8.service=jira-software-8-service"
+      - "traefik.http.services.jira-software-8-service.loadbalancer.server.port=8080"
+    environment:
+      - ATL_PROXY_NAME=jira-software-8.${OPENPROJECT_DOCKER_DEV_TLD}
+      - ATL_PROXY_PORT=443
+      - ATL_TOMCAT_SCHEME=https
+      - ATL_TOMCAT_SECURE=true
+    networks:
+      - gateway
+    volumes:
+      - jiraVolume8:/var/atlassian/application-data/jira
+    depends_on:
+      - db-jira-8
+
+  posting:
+    build:
+      dockerfile: Dockerfile.posting
+    profiles:
+      - tools
+    environment:
+      - POSTING_SSL__CA_BUNDLE=/step/certs/root_ca.crt
+      # Posting caps screen*/tmux* TERMs at 256 colours and only honours COLORTERM for others.
+      - TERM=xterm-256color
+      - COLORTERM
+      - POSTING_THEME
+    volumes:
+      - .:/jira-software
+      - step:/step:ro
+    networks:
+      - gateway
 networks:
   gateway:
     external: true
     name: gateway
 volumes:
   jiraVolume:
+  jiraVolume8:
   pgdata:
+  pgdata8:
+  step:
+    external: true
+    name: tls_step
